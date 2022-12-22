@@ -241,6 +241,32 @@ ruleTester.run('no-single-line-comment-block', rule, {
       ],
       output: '// Only one line in this block',
     },
+    {
+      code: '{/* Cannot auto fix inline one line comment */}',
+      errors: [
+        {
+          column: 2,
+          endColumn: 47,
+          line: 1,
+          endLine: 1,
+          messageId: 'useSingleLineNotation',
+        },
+      ],
+      output: null,
+    },
+    {
+      code: '{/* Can auto fix inline one line comment */\r\n}',
+      errors: [
+        {
+          column: 2,
+          endColumn: 44,
+          line: 1,
+          endLine: 1,
+          messageId: 'useSingleLineNotation',
+        },
+      ],
+      output: '{// Can auto fix inline one line comment\r\n}',
+    },
   ],
   valid: [
     '/*\n* Two lines\n* in this block\n*/',

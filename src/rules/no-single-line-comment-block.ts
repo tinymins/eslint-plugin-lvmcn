@@ -85,6 +85,18 @@ export default createRule({
      */
     const getInitialOffset = (comment: TSESTree.Comment) => sourceCode.text.slice(comment.range[0] - comment.loc.start.column, comment.range[0]);
 
+    const isLineEndAfterComment = (comment: TSESTree.Comment) => {
+      const nextCharLoc = comment.range[1];
+      const nextChar = sourceCode.text.slice(nextCharLoc, nextCharLoc + 1);
+      if (nextChar === '\n' || nextChar === '') {
+        return true;
+      }
+      if (nextChar === '\r') {
+        return sourceCode.text.slice(nextCharLoc + 1, nextCharLoc + 2) === '\n';
+      }
+      return false;
+    };
+
     const EMPTY_COMMENT_LINE = new Set(['', '*']);
     const checkers: Record<'NORMAL' | 'JSDOC', (comment: TSESTree.Comment) => void> = {
       JSDOC: (comment) => {
@@ -151,6 +163,9 @@ export default createRule({
         if (commentLines.length === 1) {
           context.report({
             fix: (fixer) => {
+              if (!isLineEndAfterComment(comment)) {
+                return null;
+              }
               let line = commentLines[0].trim();
               if (line.startsWith('*')) {
                 line = line.slice(1).trim();
