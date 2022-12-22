@@ -18,6 +18,7 @@
     "*.json",
     "/**/*.json",
     "/lib/**",
+    "/coverage/**",
     "/node_modules/**"
   ],
   "words": [
