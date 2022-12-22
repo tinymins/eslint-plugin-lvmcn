@@ -1,0 +1,28 @@
+{
+  "version": "0.2",
+  "language": "en-US",
+  "dictionaries": [
+    "companies",
+    "filetypes",
+    "misc",
+    "node",
+    "npm",
+    "softwareTerms",
+    "typescript"
+  ],
+  "flagWords": [],
+  "ignorePaths": [
+    ".eslintrc",
+    "CHANGELOG.md",
+    "*.config.js",
+    "*.json",
+    "/**/*.json",
+    "/lib/**",
+    "/node_modules/**"
+  ],
+  "words": [
+    "lvmcn",
+    "tinymins",
+    "TSES"
+  ]
+}

@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`rules exports configurations that refer to actual rules 1`] = `
+Object {
+  "all": Object {
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": Object {
+      "sourceType": "module",
+    },
+    "plugins": Array [
+      "lvmcn",
+    ],
+    "rules": Object {
+      "lvmcn/no-single-line-comment-block": "error",
+    },
+  },
+  "recommended": Object {
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": Object {
+      "sourceType": "module",
+    },
+    "plugins": Array [
+      "lvmcn",
+    ],
+    "rules": Object {
+      "lvmcn/no-single-line-comment-block": "warn",
+    },
+  },
+}
+`;
