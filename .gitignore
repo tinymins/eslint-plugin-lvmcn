@@ -4,6 +4,7 @@
 /lib
 /coverage
 /node_modules
+/src/**/*.js.map
 
 # ide
 /.idea
