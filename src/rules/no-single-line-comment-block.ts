@@ -78,12 +78,8 @@ export default createRule({
       return false;
     };
 
-    /**
-     * Gets the initial offset (whitespace) from the beginning of a line to a given comment token.
-     * @param comment The token to check.
-     * @returns The offset from the beginning of a line to the token.
-     */
-    const getInitialOffset = (comment: TSESTree.Comment) => sourceCode.text.slice(comment.range[0] - comment.loc.start.column, comment.range[0]);
+    const getIndentString = (comment: TSESTree.Comment) =>
+      ' '.repeat(sourceCode.text.slice(comment.range[0] - comment.loc.start.column, comment.range[0]).length);
 
     const isLineEndAfterComment = (comment: TSESTree.Comment) => {
       const nextCharLoc = comment.range[1];
@@ -122,7 +118,7 @@ export default createRule({
 
         context.report({
           fix: (fixer) => {
-            const indent = getInitialOffset(comment);
+            const indent = getIndentString(comment);
             return fixer.replaceTextRange(
               comment.range,
               [
@@ -130,12 +126,14 @@ export default createRule({
                 ...commentLines
                   .map((line) => {
                     line = line.trim();
-                    if (line.startsWith('*')) {
-                      line = line.slice(1).trim();
+                    if (line.startsWith('* ')) {
+                      line = line.slice(2);
+                    } else if (line.startsWith('*')) {
+                      line = line.slice(1);
                     }
                     return line ? `${indent} * ${line}` : `${indent} *`;
                   }),
-                ' */',
+                `${indent} */`,
               ].join('\n'),
             );
           },
@@ -181,7 +179,7 @@ export default createRule({
         } else {
           context.report({
             fix: (fixer) => {
-              const indent = getInitialOffset(comment);
+              const indent = getIndentString(comment);
               return fixer.replaceTextRange(
                 comment.range,
                 [
@@ -189,12 +187,14 @@ export default createRule({
                   ...commentLines
                     .map((line) => {
                       line = line.trim();
-                      if (line.startsWith('*')) {
-                        line = line.slice(1).trim();
+                      if (line.startsWith('* ')) {
+                        line = line.slice(2);
+                      } else if (line.startsWith('*')) {
+                        line = line.slice(1);
                       }
                       return line ? `${indent} * ${line}` : `${indent} *`;
                     }),
-                  ' */',
+                  `${indent} */`,
                 ].join('\n'),
               );
             },

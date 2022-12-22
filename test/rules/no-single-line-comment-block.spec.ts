@@ -202,6 +202,19 @@ ruleTester.run('no-single-line-comment-block', rule, {
       output: '/**\n * Only one line in this JSDoc (single line)\n */',
     },
     {
+      code: '/** \n*Only one line in this JSDoc (single line) **/',
+      errors: [
+        {
+          column: 1,
+          endColumn: 47,
+          line: 1,
+          endLine: 2,
+          messageId: 'useMultiLineBlock',
+        },
+      ],
+      output: '/**\n * Only one line in this JSDoc (single line)\n */',
+    },
+    {
       code: '/* cspell:ignore this */',
       errors: [
         {
@@ -266,6 +279,19 @@ ruleTester.run('no-single-line-comment-block', rule, {
         },
       ],
       output: '{// Can auto fix inline one line comment\r\n}',
+    },
+    {
+      code: '{/* Can auto fix\n inline multi line comment */}',
+      errors: [
+        {
+          column: 2,
+          endColumn: 30,
+          line: 1,
+          endLine: 2,
+          messageId: 'useMultiLineBlock',
+        },
+      ],
+      output: '{/*\n  * Can auto fix\n  * inline multi line comment\n  */}',
     },
   ],
   valid: [
