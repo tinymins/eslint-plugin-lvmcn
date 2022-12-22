@@ -20,13 +20,52 @@ ruleTester.run('no-single-line-comment-block', rule, {
       output: '// Only one line in this block',
     },
     {
-      code: '/*\n* Only one line in this block */',
+      code: '/*\n* \n*/',
       errors: [
         {
           column: 1,
-          endColumn: 33,
+          endColumn: 3,
+          line: 1,
+          endLine: 3,
+          messageId: 'useSingleLineNotation',
+        },
+      ],
+      output: '//',
+    },
+    {
+      code: '/*\n*/',
+      errors: [
+        {
+          column: 1,
+          endColumn: 3,
           line: 1,
           endLine: 2,
+          messageId: 'useSingleLineNotation',
+        },
+      ],
+      output: '//',
+    },
+    {
+      code: '/**\n*/',
+      errors: [
+        {
+          column: 1,
+          endColumn: 3,
+          line: 1,
+          endLine: 2,
+          messageId: 'useMultiLineBlock',
+        },
+      ],
+      output: '/**\n *\n */',
+    },
+    {
+      code: '/*\n* Only one line in this block\n * \n \n */',
+      errors: [
+        {
+          column: 1,
+          endColumn: 4,
+          line: 1,
+          endLine: 5,
           messageId: 'useSingleLineNotation',
         },
       ],
