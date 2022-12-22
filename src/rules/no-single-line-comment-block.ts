@@ -134,7 +134,7 @@ export default createRule({
                   '/**',
                   ...standardizeMultiLineComments(blockCommentLines.map(s => s.replace(/^\s*\*?/u, '').trim()))
                     .map(s => s.trim())
-                    .filter(s => s)
+                    .filter(Boolean)
                     .map(s => `${indent} * ${s}`),
                   ' */',
                 ].join('\n'),
@@ -145,7 +145,7 @@ export default createRule({
           });
         }
       } else if (numberOfLines <= 3 && !hasSpecialCases(blockCommentLines, ignore, ignoreRegex)) {
-        const usefulCommentLines = blockCommentLines.map(s => s.replace(/^\s*\*?/u, '').trim()).filter(s => s);
+        const usefulCommentLines = blockCommentLines.map(s => s.replace(/^\s*\*?/u, '').trim()).filter(Boolean);
         if (usefulCommentLines.length > 1) {
           context.report({
             fix: (fixer) => {
@@ -156,7 +156,7 @@ export default createRule({
                   '/*',
                   ...standardizeMultiLineComments(blockCommentLines)
                     .map(s => s.trim())
-                    .filter(s => s)
+                    .filter(Boolean)
                     .map(s => `${indent} * ${s}`),
                   ' */',
                 ].join('\n'),

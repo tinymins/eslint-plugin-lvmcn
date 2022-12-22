@@ -13,12 +13,12 @@ module.exports = {
       statements: 100,
     },
   },
-  globals: {
-    'ts-jest': {
+  transform: {
+    '\\.tsx?$': ['ts-jest', {
       diagnostics: false,
       isolatedModules: true,
       tsConfig: 'tsconfig.json',
-    },
+    }],
   },
   logHeapUsage: true,
   preset: 'ts-jest',

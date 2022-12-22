@@ -1,4 +1,4 @@
-const NodeEnvironment = require('jest-environment-node');
+const NodeEnvironment = require('jest-environment-node').default;
 const { unlink, writeFile } = require('fs');
 const { join } = require('path');
 const { promisify } = require('util');
