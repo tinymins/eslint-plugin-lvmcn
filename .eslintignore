@@ -5,4 +5,5 @@
 *.min.js
 
 /lib
+/coverage
 /package-lock.json
