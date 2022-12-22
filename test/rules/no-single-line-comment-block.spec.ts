@@ -59,13 +59,13 @@ ruleTester.run('no-single-line-comment-block', rule, {
       output: '/**\n *\n */',
     },
     {
-      code: '/*\n* Only one line in this block\n * \n \n */',
+      code: '/*\n\n *\n* Only one line in this block\n * \n \n */',
       errors: [
         {
           column: 1,
           endColumn: 4,
           line: 1,
-          endLine: 5,
+          endLine: 7,
           messageId: 'useSingleLineNotation',
         },
       ],
@@ -109,6 +109,32 @@ ruleTester.run('no-single-line-comment-block', rule, {
         },
       ],
       output: '/*\n * Two lines\n * in this one line block\n */',
+    },
+    {
+      code: '/* Two lines\n * in this one line block \n*/',
+      errors: [
+        {
+          column: 1,
+          endColumn: 3,
+          line: 1,
+          endLine: 3,
+          messageId: 'useMultiLineBlock',
+        },
+      ],
+      output: '/*\n * Two lines\n * in this one line block\n */',
+    },
+    {
+      code: '/* Two lines\n *\n * in this one line block \n*/',
+      errors: [
+        {
+          column: 1,
+          endColumn: 3,
+          line: 1,
+          endLine: 4,
+          messageId: 'useMultiLineBlock',
+        },
+      ],
+      output: '/*\n * Two lines\n *\n * in this one line block\n */',
     },
     {
       code: '/* Only one line in this block \n**/',
@@ -157,6 +183,19 @@ ruleTester.run('no-single-line-comment-block', rule, {
           endColumn: 50,
           line: 1,
           endLine: 1,
+          messageId: 'useMultiLineBlock',
+        },
+      ],
+      output: '/**\n * Only one line in this JSDoc (single line)\n */',
+    },
+    {
+      code: '/** \n* Only one line in this JSDoc (single line) **/',
+      errors: [
+        {
+          column: 1,
+          endColumn: 48,
+          line: 1,
+          endLine: 2,
           messageId: 'useMultiLineBlock',
         },
       ],
@@ -218,6 +257,10 @@ ruleTester.run('no-single-line-comment-block', rule, {
     '/* istanbul ignore if */',
     '/* istanbul ignore else */',
     '// Only one line in comment notation',
+    {
+      code: '/** allow js doc */',
+      options: [{ allowJSDoc: true, ignore: [], ignorePatterns: [] }],
+    },
     {
       code: '/* cspell:ignore this */',
       options: [{ allowJSDoc: true, ignore: ['cspell'], ignorePatterns: [] }],
