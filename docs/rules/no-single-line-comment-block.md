@@ -78,6 +78,30 @@ Example of correct code for the `{ "allowJSDoc": true }` option:
 
 By default, this option is set to `{ "allowJSDoc": false }`.
 
+### `allowInEmptyBraces`
+
+This boolean option allows one line block comment in empty braces so that this
+rule does not report their usage as being incorrect.
+
+Example of correct code for the `{ "allowInEmptyBraces": true }` option:
+
+```js
+/* eslint lvmcn/no-single-line-comment-block: ["error", { "allowInEmptyBraces": true }] */
+
+const a = {
+  /** Document for this empty object */
+};
+
+const B = (
+  <div>
+    {/** Document for next line code **/}
+    <span>Next line</span>
+  </div>
+);
+```
+
+By default, this option is set to `{ "allowInEmptyBraces": true }`.
+
 ### `ignore`
 
 This array option whitelists strings with which the comment **starts** so that

@@ -21,6 +21,9 @@ export default createRule({
           allowJSDoc: {
             type: 'boolean',
           },
+          allowInEmptyBraces: {
+            type: 'boolean',
+          },
           ignore: {
             additionalItems: false,
             items: { type: 'string' },
@@ -37,10 +40,11 @@ export default createRule({
     ],
     type: 'suggestion',
   },
-  defaultOptions: [{ allowJSDoc: false, ignore: [], ignorePatterns: [] }],
+  defaultOptions: [{ allowJSDoc: false, allowInEmptyBraces: true, ignore: [], ignorePatterns: [] }],
 
   create(context, [options]: readonly {
     allowJSDoc: boolean;
+    allowInEmptyBraces: boolean;
     ignore: string[];
     ignorePatterns: string[];
   }[]) {
@@ -81,16 +85,29 @@ export default createRule({
     const getIndentString = (comment: TSESTree.Comment) =>
       ' '.repeat(sourceCode.text.slice(comment.range[0] - comment.loc.start.column, comment.range[0]).length);
 
+    const getPrevChar = (comment: TSESTree.Comment, ignoreChars: string[] = [' ']) => {
+      let prevCharLoc = comment.range[0];
+      let prevChar = '';
+      do {
+        prevCharLoc -= 1;
+        prevChar = sourceCode.text.slice(prevCharLoc, prevCharLoc + 1);
+      } while (prevChar && ignoreChars.includes(prevChar));
+      return prevChar;
+    };
+
+    const getNextChar = (comment: TSESTree.Comment, ignoreChars: string[] = [' ']) => {
+      let nextCharLoc = comment.range[1] - 1;
+      let nextChar = '';
+      do {
+        nextCharLoc += 1;
+        nextChar = sourceCode.text.slice(nextCharLoc, nextCharLoc + 1);
+      } while (nextChar && ignoreChars.includes(nextChar));
+      return nextChar;
+    };
+
     const isLineEndAfterComment = (comment: TSESTree.Comment) => {
-      const nextCharLoc = comment.range[1];
-      const nextChar = sourceCode.text.slice(nextCharLoc, nextCharLoc + 1);
-      if (nextChar === '\n' || nextChar === '') {
-        return true;
-      }
-      if (nextChar === '\r') {
-        return sourceCode.text.slice(nextCharLoc + 1, nextCharLoc + 2) === '\n';
-      }
-      return false;
+      const nextChar = getNextChar(comment, [' ', '\r']);
+      return nextChar === '\n' || nextChar === '';
     };
 
     const EMPTY_COMMENT_LINE = new Set(['', '*']);
@@ -159,6 +176,9 @@ export default createRule({
         }
 
         if (commentLines.length === 1) {
+          if (options.allowInEmptyBraces && getPrevChar(comment) === '{' && getNextChar(comment) === '}') {
+            return;
+          }
           context.report({
             fix: (fixer) => {
               if (!isLineEndAfterComment(comment)) {

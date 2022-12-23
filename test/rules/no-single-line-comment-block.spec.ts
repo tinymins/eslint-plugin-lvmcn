@@ -4,6 +4,8 @@ import rule from '../../src/rules/no-single-line-comment-block';
 
 const ruleTester = new TSESLint.RuleTester();
 
+const defaultOptions = rule.defaultOptions[0];
+
 ruleTester.run('no-single-line-comment-block', rule, {
   invalid: [
     {
@@ -238,7 +240,7 @@ ruleTester.run('no-single-line-comment-block', rule, {
           messageId: 'useSingleLineNotation',
         },
       ],
-      options: [{ allowJSDoc: false, ignore: ['cspell'], ignorePatterns: ['(?:RegExp)(?: |)$'] }],
+      options: [{ ...defaultOptions, ignore: ['cspell'], ignorePatterns: ['(?:RegExp)(?: |)$'] }],
       output: '// should fail as it ends with cspell:ignore this',
     },
     {
@@ -255,11 +257,25 @@ ruleTester.run('no-single-line-comment-block', rule, {
       output: '// Only one line in this block',
     },
     {
-      code: '{/* Cannot auto fix inline one line comment */}',
+      code: 'console.log(1);/* Cannot auto fix inline one line comment */;console.log(2);',
+      errors: [
+        {
+          column: 16,
+          endColumn: 61,
+          line: 1,
+          endLine: 1,
+          messageId: 'useSingleLineNotation',
+        },
+      ],
+      output: null,
+    },
+    {
+      code: '{/* Cannot auto fix inline one line empty braces comment */ }',
+      options: [{ ...defaultOptions, allowInEmptyBraces: false }],
       errors: [
         {
           column: 2,
-          endColumn: 47,
+          endColumn: 60,
           line: 1,
           endLine: 1,
           messageId: 'useSingleLineNotation',
@@ -282,6 +298,7 @@ ruleTester.run('no-single-line-comment-block', rule, {
     },
     {
       code: '{/* Can auto fix\n inline multi line comment */}',
+      options: [{ ...defaultOptions, allowInEmptyBraces: false }],
       errors: [
         {
           column: 2,
@@ -309,17 +326,18 @@ ruleTester.run('no-single-line-comment-block', rule, {
     '/* istanbul ignore if */',
     '/* istanbul ignore else */',
     '// Only one line in comment notation',
+    '{ /* Only one line comment in braces */}',
     {
       code: '/** allow js doc */',
-      options: [{ allowJSDoc: true, ignore: [], ignorePatterns: [] }],
+      options: [{ ...defaultOptions, allowJSDoc: true }],
     },
     {
       code: '/* cspell:ignore this */',
-      options: [{ allowJSDoc: true, ignore: ['cspell'], ignorePatterns: [] }],
+      options: [{ ...defaultOptions, allowJSDoc: true, ignore: ['cspell'] }],
     },
     {
       code: '/* custom RegExp */',
-      options: [{ allowJSDoc: false, ignore: [], ignorePatterns: ['(?:RegExp)(?: |)$'] }],
+      options: [{ ...defaultOptions, ignorePatterns: ['(?:RegExp)(?: |)$'] }],
     },
   ],
 });
