@@ -298,7 +298,6 @@ ruleTester.run('no-single-line-comment-block', rule, {
     },
     {
       code: '{/* Can auto fix\n inline multi line comment */}',
-      options: [{ ...defaultOptions, allowInEmptyBraces: false }],
       errors: [
         {
           column: 2,
