@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@typescript-eslint/parser": "^5.47.1",
-    "@typescript-eslint/utils": "^5.47.1"
+    "@typescript-eslint/utils": "^5.55.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.3.0",
